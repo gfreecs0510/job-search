@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: jobs
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    mem_limit: 4g  # Allocates 4GB of memory to the container
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:8.15.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false  
+      - cluster.routing.allocation.disk.watermark.low=95%
+      - cluster.routing.allocation.disk.watermark.high=97%
+      - cluster.routing.allocation.disk.watermark.flood_stage=98%
+    ports:
+      - "9200:9200"                          # Expose HTTP port
+      - "9300:9300"                          # Expose transport port
+    volumes:
+      - elt_data:/usr/share/elasticsearch/data # Persist Elasticsearch data
+    mem_limit: 4g  # Allocates 4GB of memory to the container
+
+
+  kibana:
+    image: kibana:8.15.3
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elt_data:
+  mysql-data:
+    driver: local
