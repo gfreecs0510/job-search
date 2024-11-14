@@ -1,12 +1,9 @@
-function terms(property, values) {
-  let query = {};
-  if (values) {
-    return {
+export function terms(filters: object[], property: string, values: any[]) {
+  if (values.length > 0) {
+    filters.push({
       terms: {
-        property,
-        values,
+        [property]: values,
       },
-    };
+    });
   }
-  return query;
 }

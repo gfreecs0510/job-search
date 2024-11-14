@@ -10,13 +10,19 @@ export async function validateSchema(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const isValid = validate(req.body);
-  if (!isValid) {
-    res
-      .status(400)
-      .json({ error: 'Invalid request', details: validate.errors });
+  try {
+    const isValid = validate(req.body);
+    if (!isValid) {
+      res
+        .status(400)
+        .json({ error: 'Invalid request', details: validate.errors });
 
+      return;
+    }
+    next();
+  } catch (error: unknown) {
+    console.error('Caught an error:', error);
+    res.status(500).json('Server error');
     return;
   }
-  next();
 }

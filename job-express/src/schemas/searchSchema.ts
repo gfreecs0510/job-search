@@ -6,23 +6,38 @@ const searchSchema = {
     preference: { type: 'array', items: { type: 'string' } },
     work_type: { type: 'array', items: { type: 'string' } },
     location: { type: 'array', items: { type: 'string' } },
-    exp: {
-      type: 'array',
-      items: { type: 'integer' },
-      minItems: 2,
-      maxItems: 2,
+    experience: {
+      type: 'object',
+      properties: {
+        from: {
+          type: 'integer',
+          default: 0,
+        },
+        to: {
+          type: 'integer',
+          default: 100,
+        },
+      },
     },
     salary: {
-      type: 'array',
-      items: { type: 'integer' },
-      minItems: 2,
-      maxItems: 2,
+      type: 'object',
+      properties: {
+        from: {
+          type: 'integer',
+          default: 0,
+        },
+        to: {
+          type: 'integer',
+          default: 100,
+        },
+      },
     },
     debug: {
       type: 'boolean',
     },
     size: {
       type: 'number',
+      default: 20,
     },
     from: {
       type: 'number',

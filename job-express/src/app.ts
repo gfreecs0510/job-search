@@ -12,12 +12,17 @@ async function bootstrap(): Promise<void> {
   ElasticClient.initialize();
 }
 
-bootstrap().then(() => {
-  app.use(express.json());
-  app.use(helmet());
-  app.use(helmet.xssFilter());
-  app.use('/search', searchRoutes);
-  app.listen(port, () => {
-    console.log('Express app running in port: ', port);
+bootstrap()
+  .then(() => {
+    app.use(express.json());
+    app.use(helmet());
+    app.use(helmet.xssFilter());
+    app.use('/search', searchRoutes);
+    app.listen(port, () => {
+      console.log('Express app running in port: ', port);
+    });
+    throw new Error('test');
+  })
+  .catch((error: unknown) => {
+    console.error('An error occurred:', error);
   });
-});
