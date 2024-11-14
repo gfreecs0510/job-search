@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Search API
+  version: 1.0.0
+paths:
+  /search:
+    post:
+      summary: Search for items with filters and aggregations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by country
+                job_title:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by job title
+                preference:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by preference
+                work_type:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by work type
+                location:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by location
+                exp:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 2
+                  maxItems: 2
+                  description: Range filter for experience in format [min_exp, max_exp]
+                salary:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 2
+                  maxItems: 2
+                  description: Range filter for salary in format [min_salary, max_salary]
+              additionalProperties: false
+      responses:
+        '200':
+          description: A JSON object with results and aggregates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hits:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        country:
+                          type: string
+                        job_title:
+                          type: string
+                        preference:
+                          type: string
+                        work_type:
+                          type: string
+                        location:
+                          type: string
+                        min_exp:
+                          type: integer
+                        max_exp:
+                          type: integer
+                        min_salary:
+                          type: integer
+                        max_salary:
+                          type: integer
+                  aggregations:
+                    type: object
+                    properties:
+                      countries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            doc_count:
+                              type: integer
+                      job_titles:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            doc_count:
+                              type: integer
+                      preferences:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            doc_count:
+                              type: integer
+                      work_types:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            doc_count:
+                              type: integer
+                      locations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            doc_count:
+                              type: integer

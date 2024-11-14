@@ -1,0 +1,34 @@
+{
+  "name": "job-express",
+  "version": "1.0.0",
+  "description": "Job search API, powered by ElasticSearch",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "nodemon --watch src --exec ts-node src/app.ts",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\""
+  },
+  "author": "AL Lara",
+  "license": "ISC",
+  "dependencies": {
+    "@types/ajv": "^0.0.5",
+    "ajv": "^8.17.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "elasticsearch": "^16.7.3",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0"
+  },
+  "devDependencies": {
+    "@elastic/elasticsearch": "^8.15.2",
+    "@types/elasticsearch": "^5.0.43",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
