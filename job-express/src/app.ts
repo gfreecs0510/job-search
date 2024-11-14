@@ -21,7 +21,6 @@ bootstrap()
     app.listen(port, () => {
       console.log('Express app running in port: ', port);
     });
-    throw new Error('test');
   })
   .catch((error: unknown) => {
     console.error('An error occurred:', error);
