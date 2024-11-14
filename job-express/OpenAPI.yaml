@@ -2,10 +2,13 @@ openapi: 3.0.0
 info:
   title: Search API
   version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
 paths:
   /search:
     post:
-      summary: Search for items with filters and aggregations
+      summary: Search for job listings with filters and aggregations
       requestBody:
         required: true
         content:
@@ -13,6 +16,12 @@ paths:
             schema:
               type: object
               properties:
+                size:
+                  type: integer
+                  description: Number of results to return
+                from:
+                  type: integer
+                  description: Starting point for pagination
                 country:
                   type: array
                   items:
@@ -38,99 +47,196 @@ paths:
                   items:
                     type: string
                   description: Filter by location
-                exp:
-                  type: array
-                  items:
-                    type: integer
-                  minItems: 2
-                  maxItems: 2
-                  description: Range filter for experience in format [min_exp, max_exp]
+                experience:
+                  type: object
+                  properties:
+                    from:
+                      type: integer
+                      description: Minimum years of experience
+                    to:
+                      type: integer
+                      description: Maximum years of experience
+                  description: Range filter for experience
                 salary:
-                  type: array
-                  items:
-                    type: integer
-                  minItems: 2
-                  maxItems: 2
-                  description: Range filter for salary in format [min_salary, max_salary]
+                  type: object
+                  properties:
+                    from:
+                      type: integer
+                      description: Minimum salary
+                    to:
+                      type: integer
+                      description: Maximum salary
+                  description: Range filter for salary
               additionalProperties: false
       responses:
         '200':
-          description: A JSON object with results and aggregates
+          description: A JSON object with search results and aggregations
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  hits:
+                  total:
+                    type: integer
+                    description: Total number of results
+                  size:
+                    type: integer
+                    description: Number of results returned in the response
+                  from:
+                    type: integer
+                    description: Starting index of the results
+                  result:
                     type: array
                     items:
                       type: object
                       properties:
-                        id:
-                          type: string
+                        score:
+                          type: integer
+                          description: Relevance score of the job listing
+                        avg_exp:
+                          type: integer
+                          description: Average years of experience required
                         country:
                           type: string
-                        job_title:
+                        role:
                           type: string
+                          description: Job role
+                        job_portal:
+                          type: string
+                          description: Source of the job listing
                         preference:
                           type: string
+                          description: Preferred applicant gender
                         work_type:
                           type: string
-                        location:
+                          description: Employment type (e.g., Part-Time, Full-Time)
+                        skills:
                           type: string
-                        min_exp:
-                          type: integer
-                        max_exp:
-                          type: integer
-                        min_salary:
-                          type: integer
+                          description: Required skills for the role
+                        qualifications:
+                          type: string
+                          description: Required qualifications
                         max_salary:
                           type: integer
-                  aggregations:
-                    type: object
-                    properties:
-                      countries:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            doc_count:
-                              type: integer
-                      job_titles:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            doc_count:
-                              type: integer
-                      preferences:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            doc_count:
-                              type: integer
-                      work_types:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            doc_count:
-                              type: integer
-                      locations:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            doc_count:
-                              type: integer
+                          description: Maximum salary
+                        responsibilities:
+                          type: string
+                          description: Key responsibilities
+                        job_description:
+                          type: string
+                          description: Description of the job
+                        max_exp:
+                          type: integer
+                          description: Maximum years of experience required
+                        min_salary:
+                          type: integer
+                          description: Minimum salary
+                        avg_salary:
+                          type: integer
+                          description: Average salary offered
+                        company:
+                          type: string
+                          description: Hiring company name
+                        location:
+                          type: string
+                          description: Job location
+                        job_title:
+                          type: string
+                          description: Job title
+                        min_exp:
+                          type: integer
+                          description: Minimum years of experience required
+                  aggs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        country:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Country name
+                              doc_count:
+                                type: integer
+                                description: Number of listings for this country
+                        preference:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Preferred applicant gender
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this preference
+                        work_type:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Work type (e.g., Part-Time)
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this work type
+                        location:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Job location
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this location
+                        salary:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Salary range
+                              to:
+                                type: number
+                                description: Upper limit of the salary range
+                              from:
+                                type: number
+                                description: Lower limit of the salary range
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this salary range
+                        experience:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Experience range
+                              to:
+                                type: number
+                                description: Upper limit of the experience range
+                              from:
+                                type: number
+                                description: Lower limit of the experience range
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this experience range
+                        job_title:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                                description: Job title
+                              doc_count:
+                                type: integer
+                                description: Count of listings for this job title
