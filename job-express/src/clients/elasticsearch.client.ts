@@ -1,4 +1,3 @@
-// src/config/ElasticClient.ts
 import { Client } from '@elastic/elasticsearch';
 
 const JOBS_INDEX = 'jobs';
@@ -6,7 +5,7 @@ const JOBS_INDEX = 'jobs';
 class ElasticClient {
   private static instance: Client | null = null;
 
-  private constructor() {} // Private constructor to prevent direct instantiation
+  private constructor() {}
 
   static initialize(): Client {
     if (!ElasticClient.instance) {
